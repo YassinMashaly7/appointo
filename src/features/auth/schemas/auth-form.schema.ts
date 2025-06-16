@@ -1,37 +1,14 @@
 import { z } from "zod";
 
-// Helper for either email or phone
-const emailOrPhoneSchema = z.string().refine(
-  (value) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^\+?[0-9\s\-().]{7,20}$/;
-    return emailRegex.test(value) || phoneRegex.test(value);
-  },
-  {
-    message: "Enter a valid email or phone number",
-  },
-);
-
-export const registrationSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  emailOrPhone: emailOrPhoneSchema,
-  birthDate: z.string().refine(
-    (value) => {
-      const date = new Date(value);
-      return !isNaN(date.getTime());
-    },
-    {
-      message: "Enter a valid date",
-    },
-  ),
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .max(100, "Password too long"),
-  agreeToTerms: z.boolean().refine((value) => value === true, {
-    message: "You must agree to the Terms & Privacy",
-  }),
+export const signUpSchema = z.object({
+  username: z.string()
+    .min(3, "Username must be at least 3 characters")
+    .regex(/^[a-zA-Z0-9._]+$/, "Username can only contain letters, numbers, dots and underscores"),
+  email: z.string()
+    .email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string().min(6, "Please confirm your password"),
 });
 
-export type RegistrationSchemaTypes = z.infer<typeof registrationSchema>;
+
+export type Inputs = z.infer<typeof signUpSchema>;

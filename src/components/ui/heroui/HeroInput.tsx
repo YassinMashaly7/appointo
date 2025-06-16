@@ -12,8 +12,10 @@ export function HeroInput({
       variant={props.variant ?? "bordered"}
       classNames={{
         inputWrapper: "px-4 min-h-12 border shadow-none",
+        errorMessage: "transition",
       }}
       labelPlacement="outside"
+      placeholder={props.placeholder || "input"}
       {...props}
     />
   );

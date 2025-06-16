@@ -1,12 +1,12 @@
 "use client";
 
-import { INITIAL_DATA } from "@/app/[locale]/(auth)/sign-up/page";
 import { HeroCheckbox } from "@/components/ui/heroui/HeroCheckbox";
+import { Button } from "@/components/ui/button";
 import { BriefcaseBusiness, UserRound } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-type Option = "personal" | "business";
+export type Option = "personal" | "business";
 
 type OptionDataTypes = {
   label: string;
@@ -33,12 +33,20 @@ const optionsData: OptionDataTypes[] = [
 export default function AccountTypeSelection({
   updateData,
 }: {
-  updateData: (data: Partial<typeof INITIAL_DATA>) => void;
+  updateData: (data: { accountType: Option }) => void;
 }) {
-  const [selected, setSelected] = useState<"personal" | "business">("personal");
+  const [selected, setSelected] = useState<Option>("personal");
+  const [confirmed, setConfirmed] = useState(false);
+
+  const handleContinue = () => {
+    updateData({ accountType: selected });
+    setConfirmed(true);
+  };
+
+  if (confirmed) return null;
 
   return (
-    <div className="flex h-full max-h-fit min-w-full flex-col items-center gap-8">
+    <div className="flex h-full max-h-fit max-w-3xl flex-col items-center gap-8">
       <div className="mx-auto flex flex-col items-center gap-2">
         <Image src="/logo-icon.png" alt="Logo Icon" width={72} height={72} />
         <div className="flex flex-col items-center gap-2 text-center">
@@ -51,33 +59,30 @@ export default function AccountTypeSelection({
         </div>
       </div>
       <AccountTypeSelectionOptions
-        updateData={updateData}
         selected={selected}
         setSelected={setSelected}
       />
+      <Button onClick={handleContinue} className="mt-4 w-full">
+        Continue
+      </Button>
     </div>
   );
 }
 
 function AccountTypeSelectionOptions({
-  updateData,
   selected,
   setSelected,
 }: {
-  updateData: (data: Partial<typeof INITIAL_DATA>) => void;
-  selected: "personal" | "business";
-  setSelected: (value: "personal" | "business") => void;
+  selected: Option;
+  setSelected: (value: Option) => void;
 }) {
   return (
-    <section className="mb-2 grid w-full gap-8 xl:grid-cols-2 xl:gap-4">
+    <section className="grid w-full gap-8 xl:grid-cols-2 xl:gap-4">
       {optionsData.map((option) => (
         <SelectItem
           key={option.name}
           isSelected={selected === option.name}
-          onValueChange={() => {
-            setSelected(option.name);
-            updateData({ accountType: option.name });
-          }}
+          onValueChange={() => setSelected(option.name)}
           {...option}
         />
       ))}
@@ -98,18 +103,8 @@ function SelectItem({
   icon: React.ReactNode;
   onValueChange: () => void;
 }) {
-  const user = {
-    name: "Junior Garcia",
-    avatar: "https://avatars.githubusercontent.com/u/30373425?v=4",
-    username: "jrgarciadev",
-    url: "https://x.com/jrgarciadev",
-    role: "Software Developer",
-    status: "Active",
-  };
-
   return (
     <HeroCheckbox
-      aria-label={user.name}
       value={isSelected}
       onValueChange={onValueChange}
       isSelected={isSelected}

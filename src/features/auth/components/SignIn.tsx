@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { HeroCheckbox } from "@/components/ui/heroui/HeroCheckbox";
 import Image from "next/image";
 import Link from "next/link";
-import AuthProviders from "./AuthProviders";
+import AuthProviders from "./oauth-providers/AuthProviders";
 import PasswordInput from "./PasswordInput";
 import PhoneOrEmailInput from "./PhoneOrEmailInput";
 

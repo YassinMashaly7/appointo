@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
-import React from "react";
+import { supabase } from "@/lib/supabase/supabase";
+import React, { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 function GoogleIcon() {
   return (
@@ -40,13 +42,33 @@ function GoogleIcon() {
 }
 
 export default function GoogleProviderButton() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      await supabase.auth.signInWithOAuth({ provider: "google" });
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Button
       variant="outline"
-      className="flex w-full flex-1 items-center gap-4 text-sm font-medium text-gray-900 dark:text-gray-100"
+      className="flex w-full flex-1 items-center gap-4 text-sm font-medium text-gray-900 disabled:bg-red-500 dark:text-gray-100"
       type="button"
+      onClick={handleGoogleSignIn}
+      disabled={isLoading}
     >
-      <GoogleIcon /> Continue with Google
+      {isLoading ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : (
+        <GoogleIcon />
+      )}
+      {isLoading ? "Loading..." : "Continue with Google"}
     </Button>
   );
 }

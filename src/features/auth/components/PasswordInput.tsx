@@ -64,8 +64,9 @@ export const EyeFilledIcon = (props: { className?: string }) => {
   );
 };
 
-
-export default function PasswordInput({ value, onChange }: React.ComponentPropsWithoutRef<typeof Input>) {
+export default function PasswordInput(
+  props: React.ComponentPropsWithoutRef<typeof Input>,
+) {
   const [isVisible, setIsVisible] = React.useState(false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -90,9 +91,7 @@ export default function PasswordInput({ value, onChange }: React.ComponentPropsW
       labelPlacement="outside"
       placeholder="Enter your password"
       type={isVisible ? "text" : "password"}
-      value={value}
-      onChange={onChange}
-      isRequired
+      {...props}
     />
   );
 }
